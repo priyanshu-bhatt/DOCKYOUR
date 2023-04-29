@@ -1,0 +1,275 @@
+<html>
+        <head>
+                <script src="index.js"></script>
+                <link rel="stylesheet" href="index.css">
+        </head>
+        <body>
+                <header>
+                        <p> DoCkYour</p>
+                </header>
+
+<!-- Create Container -->
+<div class="form-container">
+
+<div id="core">
+<label>Name</label> <input type="text" name="cname" id="contname" />
+<label>Image </label><select name="cimage" id="contimg">
+        <option selected="true" disabled="disabled">Select Image</option>
+        <option> centos </option>
+        <option> ubuntu </option>
+        <option>python</option>
+        <option>node<option>
+</select>
+<br />
+<button onclick="run()">Launch Container</button><br />
+<button onclick="ps()">Show Container</button>
+<button onclick="contimages()">Show Images</button>
+</div>
+
+<!-------- Delete Container Part --------->
+<div id="core">
+<label>Container Name </label> <input type="text" name="cname" id="contname1" /><br />
+<button onclick="remove()">Remove Container</button>
+</div>
+
+<!------- Docker File Image Creation --------->
+<div id="core">
+        
+        <label>Username </label> <input type="text" name="username" id="user" />
+        <label>ImageName </label> <input type="text" imagename" id="imagetag" />
+        <label>version Number     </label> <input type="text" name="version" id="version_n" /><br>
+        <button style="padding: 2px;" onclick="dockfile()">Create Dockerfile</button>
+        <button onclick="buildpush()"> Build Push Image</button>
+        
+</div>
+ </div>
+
+<br />
+
+<textarea class='autoExpand' name="dfile"  id="file" rows="3"   data-min-rows='3' placeholder=' WRITE DOCKERFILE CONTENT HERE' style="text-align:center;" autofocus></textarea>
+
+<div id="troubleshoot"  class="hidden" style="text-align:center;width: max-content; display:flex; flex-direction:row;">
+        <label> [root@ip-172-31-34-87 ]</label><input placeholder="TROUBLESHOOT" name="command"  id="command"/>
+         <button onclick="basiclinux()"> Run</button><br />
+</div>
+
+<div id="terminal">
+        <h2> OUTPUT SCREEN</h2>
+<div style="color:white;"  id="linux">linux here</div>
+<div style="color:white;" id="push">Build push area</div>
+<div  id="running">Running id here</div>
+<div style="color:white;" id="pscontent">Content ps come here</div>
+<div style="color:white;" id="removecontent">Remove container </div>
+<div style="color:white;"  id="filearea">Dockerfile success</div>
+<div style="color:white;" id="images">Images here </div>
+</div>
+
+
+
+<script>
+       
+        const ip = "43.205.116.205"
+       
+        function run() {
+                        var cn= document.getElementById("contname").value;
+                        var ci= document.getElementById("contimg").value;
+                        const xhttp = new XMLHttpRequest();
+                        xhttp.onload = function() {
+                        document.getElementById("running").innerHTML = this.responseText;
+                                }
+                        //xhttp.open("GET","http://13.:3000/ps");
+		xhttp.open("GET",`http://${ip}:3001/run?cname=` + cn + "&cimage="+ ci);
+                        xhttp.send(); 
+        }
+
+        function ps() {
+                      const xhttp = new XMLHttpRequest();
+                       xhttp.onload = function() {
+                      document.getElementById("pscontent").innerHTML = this.responseText;
+                                           }
+		xhttp.open("GET",`http://${ip}:3001/ps`);
+                         xhttp.send(); 
+                }
+
+         function remove() {
+                       const cn=document.getElementById("contname1").value;
+                      const xhttp = new XMLHttpRequest();
+                       xhttp.onload = function() {
+                      document.getElementById("removecontent").innerHTML = this.responseText;
+                                           }
+		 xhttp.open("GET",`http://${ip}:3001/delete?cname=`+cn);
+                         xhttp.send(); 
+                }
+
+
+         function dockfile() {
+                         const content= document.getElementById("file").value;
+                      const xhttp = new XMLHttpRequest();
+                       xhttp.onload = function() {
+                      document.getElementById("filearea").innerHTML =  this.responseText;
+                                           }
+		 xhttp.open("GET",`http://${ip}:3001/dockerfile?dfile=`+content);
+                         xhttp.send(); 
+                }
+ function buildpush() {
+                         const username= document.getElementById("user").value;
+                         
+                         const imagename=document.getElementById("imagetag").value;
+                         const version_number=document.getElementById("version_n").value;
+                      const xhttp = new XMLHttpRequest();
+                       xhttp.onload = function() {
+                      document.getElementById("push").innerHTML =  this.responseText;
+                                           }
+	 xhttp.open("GET",`http://${ip}:3001/buildpush?username=`+username  + "&imagename="+imagename + "&version=" + version_number);
+                         xhttp.send(); 
+                }
+
+         function contimages() {
+                    
+                      const xhttp = new XMLHttpRequest();
+                       xhttp.onload = function(e) {
+                        e.preventDefault()
+                      document.getElementById("images").innerHTML = this.responseText;
+                                           }
+		 xhttp.open("GET",`http://${ip}:3001/images`);
+                         xhttp.send(); 
+                }
+        function basiclinux() {
+                        const cmd = document.getElementById("command").value;
+                      const xhttp = new XMLHttpRequest();
+                       xhttp.onload = function() {
+                      document.getElementById("linux").innerHTML = this.responseText;
+                                           }
+		console.log(cmd)
+		xhttp.open("GET",`http://${ip}:3001/linux?command=`+cmd);
+                         xhttp.send(); 
+                }
+
+
+
+
+        //fucntion start from here
+
+function getScrollHeight(elm){
+  var savedValue = elm.value
+  elm.value = ''
+  elm._baseScrollHeight = elm.scrollHeight
+  elm.value = savedValue
+}
+function onExpandableTextareaInput({ target:elm }){
+  // make sure the input event originated from a textarea and it's desired to be auto-expandable
+  if( !elm.classList.contains('autoExpand') || !elm.nodeName == 'TEXTAREA' ) return
+
+  var minRows = elm.getAttribute('data-min-rows')|0, rows;
+  !elm._baseScrollHeight && getScrollHeight(elm)
+
+  elm.rows = minRows
+  rows = Math.ceil((elm.scrollHeight - elm._baseScrollHeight) / 16)
+  elm.rows = minRows + rows
+}
+
+
+// global delegated event listener
+document.addEventListener('input', onExpandableTextareaInput)
+
+</script>
+
+<style>
+
+body{
+        margin: 0;
+	padding: 0;
+        
+        background-color: #FFFDD0;
+        /* background-image: url("https://i.pinimg.com/originals/13/44/cd/1344cdb8afc60644ab100307da6c3487.gif");
+background-repeat: no-repeat;
+
+background-size: 100% 100%;
+height: 150vh; */
+}
+
+header {
+margin-top: 200px;
+text-align:center;
+    font-size: 40px;
+    font-weight: 100;
+    font: display 20%;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background-color: darkcyan;
+    height: 80px;
+    /* padding: 20px;*/
+    margin:0 5px ; 
+    padding: 0;
+		}
+                p {
+                       
+                        font-size: larger;
+			margin-top: 13px;
+                        margin-left: -1120px;
+                }
+		
+    textarea{
+    display: block;
+    box-sizing: padding-box;
+    overflow: hidden;
+    padding: 1px;
+    width: 400px;
+    font-size: 14px;
+    margin: 50px auto;
+    border-radius: 6px;
+    box-shadow: 2px 2px 8px rgba(black, .3);
+    border: 0;
+  
+  }  
+    
+  #core{
+                        margin-top: 50px;
+			display: flex;
+			flex-direction:column;
+                        width: 10%;
+			max-width: 50%;
+                        border: 1px solid black;
+                        padding: 20px;
+                        margin-left: 20px;
+                        height:max-content;
+                        margin-left: 200px;
+                        
+		}
+
+		label {
+			margin-right: 10px;
+		}
+
+		input[type="text"] {
+			margin-right: 10px;
+			padding: 5px;
+			border-radius: 5px;
+			border: 1px solid black;
+		}
+                .form-container {
+                        margin-top: 2px;
+			display: flex;
+			flex-direction: row;
+                        height:40%;
+                        align-items: center;
+                        
+		}
+#terminal{
+        color:white;
+        background-color: black;
+        margin:0 5px ; 
+    padding: 2px;
+    text-align: center;
+}
+
+#troubleshoot{
+      background-color: black;
+      color: white;
+      margin-left: 450px;
+    }
+</style>
+        </body>
+        </html>
+

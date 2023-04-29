@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LANDING PAGE</title>
+        <script>
+		const ip="43.205.116.205"
+
+ function dockerlogin() {
+                        const user_n = document.getElementById("user").value;
+                       const pass= document.getElementById("pass").value;
+                      const xhttp = new XMLHttpRequest();
+                       xhttp.onload = function() {
+                      document.getElementById("login").innerHTML = this.responseText;
+                                           }
+	 xhttp.open("GET",`http://${ip}:3001/login?username=` + user_n + "&password="+ pass);
+                         xhttp.send(); 
+			
+                }
+            var times = 0;
+            var login_display = function(){
+
+                document.getElementById("log").style.display = "block";
+                            }
+
+var login_hide = function(){
+    document.getElementById("log").style.display = "none";
+}
+
+var decideFunction = function(){
+    if(times == 0){
+        login_display();
+        times++;
+    }
+     else{
+         login_hide();
+        times=0;
+    }
+}
+
+
+
+	function validateForm() {
+	var name= document.getElementById("user").value 
+     console.log(name)
+     var pass=document.getElementById("pass").value
+	  if (name == "" || pass == "") {
+	    alert("Please fill out all fields");
+	  }
+      else{
+        dockerlogin()
+        location.href=`/index`
+      }
+    }
+
+
+</script>
+
+</head>
+<body>
+    <div id="main" >
+        <button id="header1"> HOME </button>
+    <button id="header2" style="background-color:black;color: white;">ABOUT US</button><br/>
+        <h3>DoCkYour</h3>
+    </div>
+
+    <img  id="logo" src="https://c.tenor.com/z3Vqx6hmE5QAAAAC/whale-docker.gif"></img>
+    <div id="log">
+      
+	    <label> USERNAME </label><input  id="user"/><br/>
+ <label> PASSWORD </label><input id="pass" type="password" /><br/>
+<button id="login_suc"  onclick="validateForm()"> Go</button><br/>
+</div>
+
+
+    <button id="getstarted" onclick="decideFunction()">Get started</button>
+
+
+    <!-- <div class="container">
+
+        <div class="middle">
+          <div class="text">
+              ENTER USERNAME:<input/><br />
+              Enter Password:<input type="password" id=""></input>
+          </div>
+        </div>
+      </div> -->
+
+</body>
+
+<style>
+    body {
+
+        background-image: url("https://i.pinimg.com/originals/13/44/cd/1344cdb8afc60644ab100307da6c3487.gif");
+        background-repeat: no-repeat;
+
+  background-size: 100% 100%;
+  height: 100vh;
+    }
+    *{
+        margin:0;
+    }
+    #main{
+        text-align:center;
+        font-size: 40px;
+        font-weight: 100;
+        font: display 20%;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        background-color: darkcyan;
+        height: 80px;
+        padding: 20px;
+        margin:0 5px ;
+    }
+    #logo{
+        border-radius:70%;
+        width: 20%;
+        margin-left: 40%;
+        margin-top: 10%;
+        opacity: 0.8;
+
+    }
+
+    img:hover {
+
+  background-color: purple;
+  -o-transition:.5s;
+  -ms-transition:.5s;
+  -moz-transition:.5s;
+  -webkit-transition:.5s;
+  transition:.5s;
+  box-shadow: 5px 5px 10px 5px black;
+
+}
+
+#getstarted{
+    width: 120px;
+    height: 33px;
+    margin-left: 46%;
+    margin-top: 2%;
+    border-radius: 15px;
+    background-color:black;
+    color:white;
+    border-radius: 4px;
+
+
+  border: none;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+#getstarted:hover {
+    background-color: green;
+    color:white;
+
+}
+
+
+#header1,#header2 {
+    padding: 3px;
+    color:black;
+    border-radius: 10px;
+    margin-right: -530px;
+    margin-left: 542px;
+    width: 120px;
+    height: 33px;
+    font-family: vursive;
+    letter-spacing: 0.5px;
+}
+#header1:hover {
+    color:white;
+    background-color: green;
+
+}
+h3{
+    margin-right: 1200px;
+    margin-top: -60px;
+}
+
+#log{
+display:none;
+margin-left: 38%;
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+font-size: larger;
+font-style: italic;
+font-weight: bolder;
+}
+#login_suc{
+margin-top: 2px;
+width: 80px;
+height: 35px;
+margin-left: 15%;
+border-radius: 15px;
+background-color:black;
+color:white;
+border-radius: 4px;
+
+
+border: none;
+transition: all 0.5s;
+cursor: pointer;
+}
+
+
+#login_suc:hover {
+    background-color: green;
+    color:white;
+
+}
+</style>
+</html>
